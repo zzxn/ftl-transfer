@@ -313,8 +313,15 @@ func fail(w http.ResponseWriter, r *http.Request, msg string, status int) {
 func translateError(message, acceptLanguage string) string {
 	language := "en"
 	header := strings.ToLower(acceptLanguage)
-	if strings.HasPrefix(header, "zh") {
+	traditionalChinese := strings.HasPrefix(header, "zh-tw") ||
+		strings.HasPrefix(header, "zh-hk") ||
+		strings.HasPrefix(header, "zh-mo") ||
+		strings.HasPrefix(header, "zh-hant")
+	if strings.HasPrefix(header, "zh") && !traditionalChinese {
 		return message
+	}
+	if traditionalChinese {
+		language = "zh-TW"
 	}
 	if strings.HasPrefix(header, "ja") {
 		language = "ja"
@@ -325,22 +332,28 @@ func translateError(message, acceptLanguage string) string {
 		if language == "ja" {
 			return "ファイルが大きすぎるか、アップロードに失敗しました（上限 " + limit + "）"
 		}
+		if language == "zh-TW" {
+			return "檔案過大或上傳失敗（上限 " + limit + "）"
+		}
 		return "The file is too large or the upload failed (limit: " + limit + ")"
 	}
-	translations := map[string][2]string{
-		"设备信息无效":      {"Invalid device information", "デバイス情報が無効です"},
-		"发送方或接收方无效":   {"Invalid sender or receiver", "送信元または受信先が無効です"},
-		"没有选择文件":      {"No file selected", "ファイルが選択されていません"},
-		"无法保存文件":      {"Unable to save the file", "ファイルを保存できません"},
-		"文件上传中断":      {"The upload was interrupted", "アップロードが中断されました"},
-		"传输不存在":       {"Transfer not found", "転送が見つかりません"},
-		"只有接收方可以接受文件": {"Only the receiver can accept the file", "受信側のみファイルを受け取れます"},
-		"只有接收方可以拒绝文件": {"Only the receiver can reject the file", "受信側のみファイルを拒否できます"},
-		"文件不可下载":      {"The file is not available for download", "ファイルをダウンロードできません"},
+	translations := map[string][3]string{
+		"设备信息无效":      {"Invalid device information", "デバイス情報が無効です", "裝置資訊無效"},
+		"发送方或接收方无效":   {"Invalid sender or receiver", "送信元または受信先が無効です", "傳送方或接收方無效"},
+		"没有选择文件":      {"No file selected", "ファイルが選択されていません", "尚未選擇檔案"},
+		"无法保存文件":      {"Unable to save the file", "ファイルを保存できません", "無法儲存檔案"},
+		"文件上传中断":      {"The upload was interrupted", "アップロードが中断されました", "檔案上傳中斷"},
+		"传输不存在":       {"Transfer not found", "転送が見つかりません", "傳輸不存在"},
+		"只有接收方可以接受文件": {"Only the receiver can accept the file", "受信側のみファイルを受け取れます", "只有接收方可以接收檔案"},
+		"只有接收方可以拒绝文件": {"Only the receiver can reject the file", "受信側のみファイルを拒否できます", "只有接收方可以拒絕檔案"},
+		"文件不可下载":      {"The file is not available for download", "ファイルをダウンロードできません", "檔案無法下載"},
 	}
 	if translated, ok := translations[message]; ok {
 		if language == "ja" {
 			return translated[1]
+		}
+		if language == "zh-TW" {
+			return translated[2]
 		}
 		return translated[0]
 	}

@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="README.md">简体中文</a> · <a href="README.en.md">English</a> · <strong>日本語</strong>
+  <a href="README.zh-CN.md">简体中文</a> · <a href="README.zh-TW.md">繁體中文</a> · <a href="README.md">English</a> · <strong>日本語</strong>
 </p>
 
 <p align="center"><img src="web/icon.png" width="128" height="128" alt="FTL Transfer アイコン"></p>

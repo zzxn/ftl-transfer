@@ -1,164 +1,130 @@
 <p align="center">
-  <strong>简体中文</strong> · <a href="README.en.md">English</a> · <a href="README.ja.md">日本語</a>
+  <a href="README.zh-CN.md">简体中文</a> · <a href="README.zh-TW.md">繁體中文</a> · <strong>English</strong> · <a href="README.ja.md">日本語</a>
 </p>
 
-<p align="center">
-  <img src="web/icon.png" width="128" height="128" alt="FTL Transfer 图标">
-</p>
-
+<p align="center"><img src="web/icon.png" width="128" height="128" alt="FTL Transfer icon"></p>
 <h1 align="center">FTL Transfer</h1>
-
 <p align="center">
-  简单、快速、无需登录的局域网文件传输工具。
-  <br>
-  让手机、电脑和平板在同一 Wi-Fi 下互相发送文件。
+  Simple, fast, account-free file transfer over your local network.<br>
+  Send files between computers, phones, and tablets on the same Wi-Fi.
+</p>
+<p align="center">
+  <a href="https://github.com/zzxn/ftl-transfer/releases/latest"><strong>Download the latest release</strong></a>
+  · <a href="#troubleshooting">Troubleshooting</a>
 </p>
 
-<p align="center">
-  <a href="https://github.com/zzxn/ftl-transfer/releases/latest"><strong>下载最新版本</strong></a>
-  ·
-  <a href="#常见问题">常见问题</a>
-</p>
+## Why FTL?
 
-## 为什么选择 FTL？
+- **No client installation:** run FTL on one computer; every other device joins from a browser
+- **Automatic discovery:** devices on the same page appear automatically
+- **No cloud:** files stay within your local network
+- **Cross-platform:** works with Windows, macOS, Linux, Android, iPhone, and iPad
+- **Easy to use:** choose a device, drop a file, and let the recipient accept it
+- **Automatic cleanup:** temporary files are deleted on a schedule and removed when FTL exits
 
-- **无需安装客户端**：只需一台电脑运行 FTL，其他设备用浏览器打开连接地址
-- **自动发现设备**：进入同一个页面的设备会自动出现在列表中
-- **不经过互联网**：文件只在当前局域网内传输，不上传到云端
-- **跨平台使用**：支持 Windows、macOS、Linux、Android 和 iPhone/iPad
-- **简单直观**：选择设备，拖入文件，对方点击接收即可
-- **自动清理**：传输文件会定时删除，关闭程序时立即全部清除
+## Download
 
-## 下载
+Open [Releases](https://github.com/zzxn/ftl-transfer/releases/latest) and choose the file for your computer:
 
-前往 [Releases](https://github.com/zzxn/ftl-transfer/releases/latest)，根据电脑选择对应版本：
-
-| 电脑 | 下载文件 |
+| Computer | Download |
 | --- | --- |
-| 常见的 Windows 电脑 | `windows-amd64.zip` |
-| Windows ARM 电脑 | `windows-arm64.zip` |
-| Apple 芯片 Mac（M1/M2/M3/M4 等） | `darwin-arm64.tar.gz` |
-| Intel 芯片 Mac | `darwin-amd64.tar.gz` |
-| 常见的 64 位 Linux 电脑 | `linux-amd64.tar.gz` |
-| ARM64 Linux 设备 | `linux-arm64.tar.gz` |
+| Most Windows PCs | `windows-amd64.zip` |
+| Windows on ARM | `windows-arm64.zip` |
+| Apple silicon Mac (M1/M2/M3/M4, etc.) | `darwin-arm64.tar.gz` |
+| Intel Mac | `darwin-amd64.tar.gz` |
+| Most 64-bit Linux PCs | `linux-amd64.tar.gz` |
+| ARM64 Linux device | `linux-arm64.tar.gz` |
 
-不知道选哪个？绝大多数 Windows 电脑请选择 **windows-amd64**；近年的 Apple 芯片 Mac 请选择 **darwin-arm64**。
+If you are unsure, most Windows users need **windows-amd64**, while modern Macs with Apple silicon need **darwin-arm64**.
 
-## 使用方法
+## How to use
 
-### 1. 在一台电脑上启动 FTL
+### 1. Start FTL on one computer
 
-**Windows**
+**Windows:** Extract the ZIP and double-click the `.exe`. If Windows Firewall asks for access, allow it on **Private networks**.
 
-解压下载的 ZIP，双击 `ftl-transfer-...exe`。如果 Windows 防火墙询问是否允许访问，请勾选 **专用网络** 并允许。
+**macOS:** Extract the archive, move `FTL Transfer.app` to Applications, and open it. The app is not currently signed by an Apple Developer certificate, so you may need to right-click it and choose **Open** the first time.
 
-**macOS**
-
-解压下载的文件，将 `FTL Transfer.app` 拖入“应用程序”后打开。由于应用暂未进行 Apple 开发者签名，首次启动可能需要右键点击应用并选择 **打开**。
-
-**Linux**
-
-解压后在终端运行：
+**Linux:** Extract the archive and run:
 
 ```bash
-./ftl-transfer-版本-linux-amd64
+./ftl-transfer-version-linux-amd64
 ```
 
-### 2. 让其他设备加入
+### 2. Join from other devices
 
-启动后，页面右上角会显示类似下面的连接地址：
+FTL displays a connection address in the top-right corner:
 
 ```text
 http://192.168.1.10:53142
 ```
 
-让手机、平板和其他电脑连接同一个 Wi-Fi，然后在浏览器中打开这个地址。也可以点击页面右上角的地址进行复制。
+Connect the other devices to the same Wi-Fi and open that address in their browsers. You can click the address to copy it.
 
-> 只需要在一台电脑上运行 FTL。所有设备必须打开这台电脑提供的同一个地址，不要在每台设备上分别运行程序。
+> Run FTL on only one computer. Every device must open the exact same address provided by that computer.
 
-### 3. 发送文件
+### 3. Send a file
 
-1. 在设备列表中选择接收设备
-2. 点击文件区域选择文件，或直接把文件拖进去
-3. 接收方点击 **接收**
-4. 浏览器开始下载文件
+1. Select the receiving device
+2. Choose files or drag them into the drop area
+3. The recipient clicks **Accept**
+4. The browser downloads the file
 
-支持连续发送多个文件，默认单文件最大 2 GB。
+Multiple files are supported. The default maximum size is 2 GB per file.
 
-## 隐私与安全
+## Privacy and security
 
-FTL 不需要账号，也不会把文件上传到互联网。文件会暂存在运行 FTL 的电脑上，用于让接收设备下载：
+FTL needs no account and does not upload files to the internet. Files are temporarily stored on the computer running FTL:
 
-- 未完成的文件最多保留 2 小时
-- 已完成或拒绝的文件会更快清理
-- 关闭 FTL 后，所有临时文件立即删除
+- Pending files are kept for no more than two hours
+- Completed or rejected files are removed sooner
+- All temporary files are deleted when FTL exits
 
-请仅在你信任的家庭、办公或个人热点网络中使用，不建议在公共 Wi-Fi 中运行。
+Use FTL only on a trusted home, office, or personal hotspot network.
 
-## 常见问题
+## Troubleshooting
 
-### 其他设备打不开连接地址
+### Another device cannot open the address
 
-请依次检查：
+- Make sure both devices use the same Wi-Fi
+- Allow FTL through Windows Firewall on Private networks
+- Do not use a guest Wi-Fi network
+- Disable AP/client isolation on the router
+- Keep the FTL process running
+- Enter the full `http://IP:port` address
 
-- 两台设备是否连接了同一个 Wi-Fi
-- Windows 防火墙是否允许 FTL 访问“专用网络”
-- 是否误用了访客 Wi-Fi
-- 路由器是否开启了 AP 隔离或客户端隔离
-- 运行 FTL 的窗口是否仍然打开
-- 浏览器中是否输入了完整的 `http://IP:端口`
+### A device does not appear
 
-### 页面一直显示“正在获取连接地址”
+Make sure both devices opened the exact same address and keep both pages open. Discovery normally takes up to four seconds.
 
-请确认使用的是最新版本，然后按 `Ctrl + F5` 强制刷新页面。旧版本在部分 Windows Edge 环境中可能无法初始化设备信息。
+### Windows says “Unknown publisher”
 
-### 设备列表中看不到另一台设备
-
-确认两台设备打开的是完全相同的连接地址，并让页面保持打开。设备通常会在 4 秒内出现。
-
-### Windows 提示“未知发布者”
-
-目前程序没有商业代码签名，因此 Windows SmartScreen 可能显示提醒。确认文件来自本仓库的
-[Releases](https://github.com/zzxn/ftl-transfer/releases/latest) 后，可以选择“更多信息”并继续运行。
-发布页提供 `checksums.txt`，可用于校验下载文件的 SHA-256。
+FTL is not commercially code-signed yet, so Windows SmartScreen may display a warning. Only download it from this repository's
+[Releases](https://github.com/zzxn/ftl-transfer/releases/latest). Each release includes `checksums.txt` for SHA-256 verification.
 
 <details>
-<summary><strong>开发与源码运行</strong></summary>
+<summary><strong>Development</strong></summary>
 
-### 环境要求
-
-- Go 1.23 或更高版本
-- GNU Make（仅构建发布包时需要）
-
-### 从源码启动
+Requires Go 1.23 or newer.
 
 ```bash
+# Run from source
 go run .
+
+# Build every platform
+make VERSION=1.0.0
+
+# Build release archives
+make package VERSION=1.0.0
 ```
 
-可以固定端口或修改单文件大小上限：
+Optional settings:
 
 ```bash
 PORT=8080 MAX_FILE_MB=4096 go run .
 ```
 
-### 构建
-
-```bash
-# 构建所有平台
-make VERSION=1.0.0
-
-# 构建 GitHub Release 压缩包
-make package VERSION=1.0.0
-
-# 仅构建当前平台
-make build
-
-# 清理产物
-make clean
-```
-
-推送 `v*` 格式的 Git Tag 会触发 GitHub Actions，自动测试、构建并发布压缩包。
+Pushing a `v*` Git tag triggers GitHub Actions to test, build, and publish a release automatically.
 
 </details>
 

@@ -14,6 +14,18 @@ const messages = {
     renamePrompt:"给这台设备起个名字",addressCopied:"局域网连接地址已复制",manualCopy:"浏览器不允许自动复制，请手动复制：",
     mobileDevice:"移动设备",computer:"电脑"
   },
+  "zh-TW": {
+    title:"FTL · 區域網路快傳",copyTitle:"點擊複製區域網路位址",gettingAddress:"正在取得連線位址",copy:"複製",
+    eyebrow:"LOCAL FILE TRANSFER",hero1:"隔空一丟，",hero2:"檔案就到了。",subtitle:"無需登入，不經雲端。選擇同一區域網路內的裝置，立即傳送。",
+    selectDevice:"選擇裝置",thisDevice:"本機：",searchingDevices:"正在尋找附近裝置",openOnOthers:"在其他裝置上開啟此頁面，它會自動出現",
+    selectFiles:"選擇檔案",noDeviceSelected:"尚未選擇裝置",dropFiles:"將檔案拖放到這裡",browseFiles:"或點擊瀏覽檔案 · 單一檔案最大 2GB",
+    activity:"傳輸動態",noTransfers:"尚無傳輸記錄",onlineSelect:"線上 · 點擊選擇",sendTo:"傳送至 {name}",items:"{count} 項",
+    waitingYou:"等待你接收",waitingThem:"等待對方接收",readyDownload:"可以下載",receiving:"對方正在接收",completed:"傳輸完成",rejected:"已拒絕",
+    reject:"拒絕",accept:"接收",download:"下載檔案",from:"來自 {name}",to:"傳送給 {name}",otherDevice:"另一台裝置",
+    chooseReceiver:"請先選擇接收裝置",sent:"已傳送 {name}",sendFailed:"傳送失敗：{name}",requestFailed:"請求失敗",networkError:"網路連線中斷",
+    renamePrompt:"為這台裝置命名",addressCopied:"已複製區域網路連線位址",manualCopy:"瀏覽器不允許自動複製，請手動複製：",
+    mobileDevice:"行動裝置",computer:"電腦"
+  },
   en: {
     title:"FTL · Local File Transfer",copyTitle:"Click to copy the LAN address",gettingAddress:"Getting connection address",copy:"Copy",
     eyebrow:"LOCAL FILE TRANSFER",hero1:"Drop it here.",hero2:"It lands over there.",subtitle:"No sign-in. No cloud. Pick a device on your local network and send.",
@@ -40,7 +52,8 @@ const messages = {
   }
 };
 
-let language = detectedLanguage.startsWith("zh") ? "zh" : detectedLanguage.startsWith("ja") ? "ja" : "en";
+const traditionalChinese=/^zh-(tw|hk|mo|hant)/.test(detectedLanguage);
+let language=traditionalChinese?"zh-TW":detectedLanguage.startsWith("zh")?"zh":detectedLanguage.startsWith("ja")?"ja":"en";
 function t(key, values={}) {
   let value=(messages[language]||messages.en)[key] || messages.en[key] || key;
   for(const [name,replacement] of Object.entries(values)) value=value.replaceAll(`{${name}}`,replacement);
