@@ -63,6 +63,9 @@ make package VERSION=1.0.0
 Windows 产物使用 `.zip`，macOS/Linux 产物使用 `.tar.gz`，最终附件位于
 `dist/release/`，其中还会生成 SHA-256 `checksums.txt`。
 
+Windows 的 `.exe` 会嵌入应用图标；macOS 发布包中包含带图标的
+`FTL Transfer.app`，双击后会自动启动服务并打开浏览器。
+
 推送 `v*` 格式的 Git Tag 会触发 GitHub Actions，自动测试、构建并发布这些压缩包：
 
 ```bash

@@ -13,7 +13,9 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strconv"
 	"strings"
 	"sync"
@@ -90,6 +92,9 @@ func main() {
 	log.Printf("本机访问: http://localhost:%s", actualPort)
 	for _, address := range addresses {
 		log.Printf("局域网访问: %s", address)
+	}
+	if os.Getenv("OPEN_BROWSER") == "1" {
+		go openBrowser("http://localhost:" + actualPort)
 	}
 	log.Fatal(http.Serve(listener, securityHeaders(mux)))
 }
@@ -361,4 +366,18 @@ func localURLs(port string) []string {
 		out = append(out, "http://"+net.JoinHostPort(ip, port))
 	}
 	return out
+}
+
+func openBrowser(url string) {
+	time.Sleep(300 * time.Millisecond)
+	var command *exec.Cmd
+	switch runtime.GOOS {
+	case "darwin":
+		command = exec.Command("open", url)
+	case "windows":
+		command = exec.Command("rundll32", "url.dll,FileProtocolHandler", url)
+	default:
+		command = exec.Command("xdg-open", url)
+	}
+	_ = command.Start()
 }

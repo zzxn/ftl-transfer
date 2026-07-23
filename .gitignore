@@ -4,6 +4,7 @@
 /ftl-transfer.exe
 *.test
 *.out
+/*.syso
 
 # Local configuration and environment
 .env
