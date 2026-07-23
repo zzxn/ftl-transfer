@@ -54,4 +54,20 @@ make clean
 make release PLATFORMS="linux/amd64 freebsd/amd64 windows/amd64"
 ```
 
+生成适合 GitHub Release 的压缩包：
+
+```bash
+make package VERSION=1.0.0
+```
+
+Windows 产物使用 `.zip`，macOS/Linux 产物使用 `.tar.gz`，最终附件位于
+`dist/release/`，其中还会生成 SHA-256 `checksums.txt`。
+
+推送 `v*` 格式的 Git Tag 会触发 GitHub Actions，自动测试、构建并发布这些压缩包：
+
+```bash
+git tag -a v1.0.0 -m "Release v1.0.0"
+git push origin v1.0.0
+```
+
 文件只暂存在运行服务的电脑上：普通文件保留最多 2 小时，已完成或拒绝的文件会更快清理；服务退出时全部删除。

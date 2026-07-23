@@ -14,7 +14,7 @@ PLATFORMS ?= \
 
 LDFLAGS := -s -w
 
-.PHONY: all release build clean list
+.PHONY: all release package build clean list
 
 all: release
 
@@ -35,6 +35,10 @@ release: clean
 			-o "$$output" .; \
 	done
 	@echo "Built $$(find "$(DIST_DIR)" -maxdepth 1 -type f | wc -l | tr -d ' ') binaries in $(DIST_DIR)/"
+
+package: release
+	@go run -buildvcs=false ./cmd/package -dist "$(DIST_DIR)"
+	@echo "Packaged release assets in $(DIST_DIR)/release/"
 
 build:
 	@mkdir -p "$(DIST_DIR)"
