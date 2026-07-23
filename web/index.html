@@ -12,49 +12,56 @@
 <body>
   <header>
     <a class="brand" href="/"><span class="brand-mark">F</span><span>FTL</span></a>
-    <button id="addressBtn" class="online" type="button" title="点击复制局域网地址"><i></i><span id="addressText">正在获取连接地址</span><b>复制</b></button>
+    <div class="header-actions">
+      <select id="languageSelect" class="language-select" aria-label="Language">
+        <option value="zh">中文</option>
+        <option value="en">English</option>
+        <option value="ja">日本語</option>
+      </select>
+      <button id="addressBtn" class="online" type="button" title="点击复制局域网地址" data-i18n-title="copyTitle"><i></i><span id="addressText" data-i18n="gettingAddress">正在获取连接地址</span><b data-i18n="copy">复制</b></button>
+    </div>
   </header>
 
   <main>
     <section class="hero">
-      <p class="eyebrow">LOCAL FILE TRANSFER</p>
-      <h1>隔空一扔，<br><em>文件就到了。</em></h1>
-      <p class="subtitle">无需登录，不经云端。选择同一局域网内的设备，立即发送。</p>
+      <p class="eyebrow" data-i18n="eyebrow">LOCAL FILE TRANSFER</p>
+      <h1><span data-i18n="hero1">隔空一扔，</span><br><em data-i18n="hero2">文件就到了。</em></h1>
+      <p class="subtitle" data-i18n="subtitle">无需登录，不经云端。选择同一局域网内的设备，立即发送。</p>
     </section>
 
     <section class="workspace">
       <div class="panel devices-panel">
         <div class="panel-head">
-          <div><span class="step">01</span><h2>选择设备</h2></div>
-          <button id="renameBtn" class="text-btn" type="button">本机：<b id="myName"></b> ✎</button>
+          <div><span class="step">01</span><h2 data-i18n="selectDevice">选择设备</h2></div>
+          <button id="renameBtn" class="text-btn" type="button"><span data-i18n="thisDevice">本机：</span><b id="myName"></b> ✎</button>
         </div>
         <div id="devices" class="device-grid"></div>
         <div id="emptyDevices" class="empty">
           <div class="radar"><span></span><i></i></div>
-          <strong>正在寻找附近设备</strong>
-          <p>在其他设备上打开这个页面，它会自动出现</p>
+          <strong data-i18n="searchingDevices">正在寻找附近设备</strong>
+          <p data-i18n="openOnOthers">在其他设备上打开这个页面，它会自动出现</p>
         </div>
       </div>
 
       <div class="panel send-panel">
         <div class="panel-head">
-          <div><span class="step">02</span><h2>选择文件</h2></div>
-          <span id="targetLabel" class="target-label">尚未选择设备</span>
+          <div><span class="step">02</span><h2 data-i18n="selectFiles">选择文件</h2></div>
+          <span id="targetLabel" class="target-label" data-i18n="noDeviceSelected">尚未选择设备</span>
         </div>
         <label id="dropzone" class="dropzone">
           <input id="fileInput" type="file" multiple>
           <span class="plus">＋</span>
-          <strong>拖放文件到这里</strong>
-          <p>或点击浏览文件 · 单文件最大 2GB</p>
+          <strong data-i18n="dropFiles">拖放文件到这里</strong>
+          <p data-i18n="browseFiles">或点击浏览文件 · 单文件最大 2GB</p>
         </label>
         <div id="queue" class="queue"></div>
       </div>
     </section>
 
     <section class="transfers">
-      <div class="section-title"><h2>传输动态</h2><span id="transferCount">0 项</span></div>
+      <div class="section-title"><h2 data-i18n="activity">传输动态</h2><span id="transferCount">0 项</span></div>
       <div id="transferList" class="transfer-list"></div>
-      <div id="emptyTransfers" class="empty-line">还没有传输记录</div>
+      <div id="emptyTransfers" class="empty-line" data-i18n="noTransfers">还没有传输记录</div>
     </section>
   </main>
 

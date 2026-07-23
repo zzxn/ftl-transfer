@@ -105,7 +105,7 @@ func (a *app) heartbeat(w http.ResponseWriter, r *http.Request) {
 		Name string `json:"name"`
 	}
 	if json.NewDecoder(r.Body).Decode(&in) != nil || in.ID == "" {
-		fail(w, "设备信息无效", 400)
+		fail(w, r, "设备信息无效", 400)
 		return
 	}
 	in.ID = cleanID(in.ID)
@@ -139,17 +139,17 @@ func (a *app) listDevices(w http.ResponseWriter, r *http.Request) {
 func (a *app) upload(w http.ResponseWriter, r *http.Request) {
 	r.Body = http.MaxBytesReader(w, r.Body, a.maxSize+(2<<20))
 	if err := r.ParseMultipartForm(2 << 20); err != nil {
-		fail(w, fmt.Sprintf("文件过大或上传失败（上限 %d MB）", a.maxSize/(1024*1024)), 413)
+		fail(w, r, fmt.Sprintf("文件过大或上传失败（上限 %d MB）", a.maxSize/(1024*1024)), 413)
 		return
 	}
 	from, to := cleanID(r.FormValue("from")), cleanID(r.FormValue("to"))
 	if from == "" || to == "" || from == to {
-		fail(w, "发送方或接收方无效", 400)
+		fail(w, r, "发送方或接收方无效", 400)
 		return
 	}
 	file, header, err := r.FormFile("file")
 	if err != nil {
-		fail(w, "没有选择文件", 400)
+		fail(w, r, "没有选择文件", 400)
 		return
 	}
 	defer file.Close()
@@ -157,14 +157,14 @@ func (a *app) upload(w http.ResponseWriter, r *http.Request) {
 	path := filepath.Join(a.tempDir, id)
 	dst, err := os.OpenFile(path, os.O_CREATE|os.O_EXCL|os.O_WRONLY, 0600)
 	if err != nil {
-		fail(w, "无法保存文件", 500)
+		fail(w, r, "无法保存文件", 500)
 		return
 	}
 	size, copyErr := io.Copy(dst, file)
 	closeErr := dst.Close()
 	if copyErr != nil || closeErr != nil {
 		os.Remove(path)
-		fail(w, "文件上传中断", 500)
+		fail(w, r, "文件上传中断", 500)
 		return
 	}
 	name := filepath.Base(strings.ReplaceAll(header.Filename, "\\", "/"))
@@ -204,17 +204,17 @@ func (a *app) setStatus(status string) http.HandlerFunc {
 		t, ok := a.transfers[id]
 		if !ok || (t.From != deviceID && t.To != deviceID) {
 			a.mu.Unlock()
-			fail(w, "传输不存在", 404)
+			fail(w, r, "传输不存在", 404)
 			return
 		}
 		if status == "accepted" && t.To != deviceID {
 			a.mu.Unlock()
-			fail(w, "只有接收方可以接受文件", 403)
+			fail(w, r, "只有接收方可以接受文件", 403)
 			return
 		}
 		if status == "rejected" && t.To != deviceID {
 			a.mu.Unlock()
-			fail(w, "只有接收方可以拒绝文件", 403)
+			fail(w, r, "只有接收方可以拒绝文件", 403)
 			return
 		}
 		t.Status = status
@@ -233,7 +233,7 @@ func (a *app) download(w http.ResponseWriter, r *http.Request) {
 	}
 	a.mu.RUnlock()
 	if !ok || t.To != deviceID || (t.Status != "accepted" && t.Status != "completed") {
-		fail(w, "文件不可下载", 403)
+		fail(w, r, "文件不可下载", 403)
 		return
 	}
 	w.Header().Set("Content-Disposition", mime.FormatMediaType("attachment", map[string]string{"filename": t.Name}))
@@ -300,9 +300,51 @@ func writeJSON(w http.ResponseWriter, v any) {
 	_ = json.NewEncoder(w).Encode(v)
 }
 
-func fail(w http.ResponseWriter, msg string, status int) {
+func fail(w http.ResponseWriter, r *http.Request, msg string, status int) {
+	language := r.Header.Get("X-FTL-Language")
+	if language == "" {
+		language = r.Header.Get("Accept-Language")
+	}
+	msg = translateError(msg, language)
 	w.WriteHeader(status)
 	writeJSON(w, map[string]string{"error": msg})
+}
+
+func translateError(message, acceptLanguage string) string {
+	language := "en"
+	header := strings.ToLower(acceptLanguage)
+	if strings.HasPrefix(header, "zh") {
+		return message
+	}
+	if strings.HasPrefix(header, "ja") {
+		language = "ja"
+	}
+	sizePrefix := "文件过大或上传失败（上限 "
+	if strings.HasPrefix(message, sizePrefix) {
+		limit := strings.TrimSuffix(strings.TrimPrefix(message, sizePrefix), "）")
+		if language == "ja" {
+			return "ファイルが大きすぎるか、アップロードに失敗しました（上限 " + limit + "）"
+		}
+		return "The file is too large or the upload failed (limit: " + limit + ")"
+	}
+	translations := map[string][2]string{
+		"设备信息无效":      {"Invalid device information", "デバイス情報が無効です"},
+		"发送方或接收方无效":   {"Invalid sender or receiver", "送信元または受信先が無効です"},
+		"没有选择文件":      {"No file selected", "ファイルが選択されていません"},
+		"无法保存文件":      {"Unable to save the file", "ファイルを保存できません"},
+		"文件上传中断":      {"The upload was interrupted", "アップロードが中断されました"},
+		"传输不存在":       {"Transfer not found", "転送が見つかりません"},
+		"只有接收方可以接受文件": {"Only the receiver can accept the file", "受信側のみファイルを受け取れます"},
+		"只有接收方可以拒绝文件": {"Only the receiver can reject the file", "受信側のみファイルを拒否できます"},
+		"文件不可下载":      {"The file is not available for download", "ファイルをダウンロードできません"},
+	}
+	if translated, ok := translations[message]; ok {
+		if language == "ja" {
+			return translated[1]
+		}
+		return translated[0]
+	}
+	return message
 }
 
 func env(key, fallback string) string {
