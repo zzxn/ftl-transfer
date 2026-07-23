@@ -1,0 +1,19 @@
+# Build output
+/dist/
+/ftl-transfer
+/ftl-transfer.exe
+*.test
+*.out
+
+# Local configuration and environment
+.env
+.env.*
+!.env.example
+
+# Editors and operating systems
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
